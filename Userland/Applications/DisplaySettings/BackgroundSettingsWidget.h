@@ -23,20 +23,20 @@ class BackgroundSettingsWidget : public GUI::SettingsWindow::Tab {
     C_OBJECT_ABSTRACT(BackgroundSettingsWidget);
 
 public:
-    static ErrorOr<NonnullRefPtr<BackgroundSettingsWidget>> try_create(bool& background_settings_changed);
+    static ErrorOr<NonnullRefPtr<BackgroundSettingsWidget>> try_create(bool* background_settings_changed);
+
     virtual ~BackgroundSettingsWidget() override = default;
 
     virtual void apply_settings() override;
 
 private:
-    BackgroundSettingsWidget(bool& background_settings_changed);
-
+    static ErrorOr<NonnullRefPtr<BackgroundSettingsWidget>> try_create();
     ErrorOr<void> create_frame();
     ErrorOr<void> load_current_settings();
 
     Vector<String> m_modes;
 
-    bool& m_background_settings_changed;
+    bool* m_background_settings_changed;
 
     RefPtr<DisplaySettings::MonitorWidget> m_monitor_widget;
     RefPtr<GUI::IconView> m_wallpaper_view;

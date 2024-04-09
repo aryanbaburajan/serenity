@@ -17,6 +17,8 @@ class FontSettingsWidget final : public GUI::SettingsWindow::Tab {
 
 public:
     static ErrorOr<NonnullRefPtr<FontSettingsWidget>> try_create();
+    ErrorOr<void> initialize();
+
     virtual ~FontSettingsWidget() override = default;
 
     virtual void apply_settings() override;

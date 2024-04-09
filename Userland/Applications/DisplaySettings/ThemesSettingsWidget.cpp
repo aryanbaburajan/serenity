@@ -7,7 +7,6 @@
 
 #include "ThemesSettingsWidget.h"
 #include <AK/QuickSort.h>
-#include <Applications/DisplaySettings/ThemesSettingsGML.h>
 #include <LibCore/Directory.h>
 #include <LibGUI/Application.h>
 #include <LibGUI/CheckBox.h>
@@ -23,13 +22,14 @@ static ErrorOr<String> get_color_scheme_name_from_pathname(StringView color_sche
     return TRY(String::from_byte_string(color_scheme_path.replace("/res/color-schemes/"sv, ""sv, ReplaceMode::FirstOnly).replace(".ini"sv, ""sv, ReplaceMode::FirstOnly)));
 }
 
-ErrorOr<NonnullRefPtr<ThemesSettingsWidget>> ThemesSettingsWidget::try_create(bool& background_settings_changed)
+ErrorOr<NonnullRefPtr<ThemesSettingsWidget>> ThemesSettingsWidget::try_create(bool* background_settings_changed)
 {
-    auto theme_settings_widget = TRY(adopt_nonnull_ref_or_enomem(new (nothrow) ThemesSettingsWidget(background_settings_changed)));
-    TRY(theme_settings_widget->load_from_gml(themes_settings_gml));
-    TRY(theme_settings_widget->setup_interface());
+    auto widget = TRY(ThemesSettingsWidget::try_create());
 
-    return theme_settings_widget;
+    widget->m_background_settings_changed = background_settings_changed;
+    TRY(widget->setup_interface());
+
+    return widget;
 }
 
 ErrorOr<void> ThemesSettingsWidget::setup_interface()
@@ -158,14 +158,9 @@ ErrorOr<void> ThemesSettingsWidget::setup_interface()
     return {};
 }
 
-ThemesSettingsWidget::ThemesSettingsWidget(bool& background_settings_changed)
-    : m_background_settings_changed { background_settings_changed }
-{
-}
-
 void ThemesSettingsWidget::apply_settings()
 {
-    m_background_settings_changed = false;
+    *m_background_settings_changed = false;
     auto color_scheme_path_or_error = String::formatted("/res/color-schemes/{}.ini", m_selected_color_scheme_name);
     if (color_scheme_path_or_error.is_error()) {
         GUI::MessageBox::show_error(window(), "Unable to apply changes"sv);

@@ -20,7 +20,9 @@ class ThemesSettingsWidget final : public GUI::SettingsWindow::Tab {
     C_OBJECT_ABSTRACT(ThemesSettingsWidget);
 
 public:
-    static ErrorOr<NonnullRefPtr<ThemesSettingsWidget>> try_create(bool& background_settings_changed);
+    static ErrorOr<NonnullRefPtr<ThemesSettingsWidget>> try_create();
+    static ErrorOr<NonnullRefPtr<ThemesSettingsWidget>> try_create(bool* background_settings_changed);
+
     virtual void apply_settings() override;
 
 private:
@@ -36,10 +38,8 @@ private:
 
     RefPtr<GUI::Button> m_cursor_themes_button;
 
-    bool& m_background_settings_changed;
+    bool* m_background_settings_changed;
     bool m_color_scheme_is_file_based = true;
-
-    ThemesSettingsWidget(bool& background_settings_changed);
 };
 
 }

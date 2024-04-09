@@ -17,6 +17,7 @@ class MonitorWidget final : public GUI::Widget {
 
 public:
     static ErrorOr<NonnullRefPtr<MonitorWidget>> try_create();
+
     bool set_wallpaper(String path);
     Optional<StringView> wallpaper() const;
 

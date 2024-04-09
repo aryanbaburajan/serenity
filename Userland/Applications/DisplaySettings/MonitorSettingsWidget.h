@@ -23,6 +23,8 @@ class MonitorSettingsWidget final : public GUI::SettingsWindow::Tab {
 
 public:
     static ErrorOr<NonnullRefPtr<MonitorSettingsWidget>> try_create();
+    ErrorOr<void> initialize();
+
     ~MonitorSettingsWidget() override
     {
         if (m_showing_screen_numbers)

@@ -17,6 +17,8 @@ class DesktopSettingsWidget : public GUI::SettingsWindow::Tab {
 
 public:
     static ErrorOr<NonnullRefPtr<DesktopSettingsWidget>> try_create();
+    ErrorOr<void> initialize();
+
     virtual ~DesktopSettingsWidget() override = default;
 
     virtual void apply_settings() override;
